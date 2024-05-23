@@ -1,23 +1,37 @@
 "use client";
 import React from "react";
 import { useState } from "react";
-import { TextField, Button, Callout } from "@radix-ui/themes";
+import { TextField, Button, Callout, Text } from "@radix-ui/themes";
 import { useForm, Controller } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { RxInfoCircled } from "react-icons/rx";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createIssueSchema } from "@/app/validationSchemas";
+import { z } from "zod";
 
-// interface for shape of the form
+// interface for shape of the form. we can remove due to importing our schema and using z.infer
+/* 
 interface IssueForm {
     title: string;
     description: string;
 }
+*/
+
+type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
     const router = useRouter();
-    const { register, control, handleSubmit } = useForm<IssueForm>();
+    const {
+        register,
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<IssueForm>({
+        resolver: zodResolver(createIssueSchema),
+    });
     console.log(register("title"));
     const [error, setError] = useState("");
 
@@ -38,6 +52,7 @@ const NewIssuePage = () => {
                         await axios.post("/api/issues", data);
                         router.push("/issues");
                     } catch (error) {
+                        console.log(error);
                         setError("An unexpected error occurred.");
                     }
                 })}
@@ -46,6 +61,11 @@ const NewIssuePage = () => {
                     placeholder="Title"
                     {...register("title")}
                 ></TextField.Root>
+                {errors.title && (
+                    <Text color="red" as="p">
+                        {errors.title.message}
+                    </Text>
+                )}
                 <Controller
                     name="description"
                     control={control}
@@ -53,6 +73,11 @@ const NewIssuePage = () => {
                         <SimpleMDE placeholder="Description" {...field} />
                     )}
                 />
+                {errors.description && (
+                    <Text color="red" as="p">
+                        {errors.description.message}
+                    </Text>
+                )}
                 <Button>Submit New Issue</Button>
             </form>
         </div>
