@@ -36,6 +36,10 @@ const NewIssuePage = () => {
     console.log(register("title"));
     const [error, setError] = useState("");
 
+    if (errors) {
+        console.log(errors);
+    }
+
     return (
         <div className="max-w-xl">
             {error && (
@@ -66,7 +70,7 @@ const NewIssuePage = () => {
                 <Controller
                     name="description"
                     control={control}
-                    render={({ field }) => (
+                    render={({ field, formState: { errors } }) => (
                         <SimpleMDE placeholder="Description" {...field} />
                     )}
                 />
