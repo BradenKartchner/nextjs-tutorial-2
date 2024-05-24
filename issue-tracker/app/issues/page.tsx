@@ -7,9 +7,7 @@ import prisma from "@/prisma/client";
 export const getData = async () => {
     const myIssues = await prisma.issue.findMany();
     //console.log(myIssues);
-    return {
-        myIssues,
-    };
+    return myIssues;
 };
 
 const IssuesPage = () => {

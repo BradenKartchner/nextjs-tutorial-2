@@ -1,65 +1,59 @@
 //"use client";
 // Get all issues from Database and display them in a readable format
 import React from "react";
-import axios from "axios";
-import prisma from "@/prisma/client";
-import { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { getData } from "../issues/page";
 
-/* async function getData() {
-    try {
-        //setWaitingForData(true);
-        const allData = await prisma.issue.findMany();
-        // console.log(allData);
-        //setWaitingForData(false);
-        return allData;
-    } catch (error) {
-        //setWaitingForData(false);
-        console.log(error);
-        // return error;
-    }
-} */
-
-/* enum Status {
-    OPEN,
-    IN_PROGRESS,
-    CLOSED
-  }
-  
-
-type dispIssue = {
-    id: number;
-    title: string;
-    description: string;
-    status: Status;
-    createdAt: Date;
-    updatedAt: Date;
-}; */
-
-/* export const getServerSideProps = (async () => {
-    const myIssues = await prisma.issue.findMany();
-    //console.log(myIssues);
-    return {
-        props: { myIssues },
-    };
-}) */
-
 export default async function AllIssues() {
-    //const [waitingForData, setWaitingForData] = useState(false);
-    //const [testData, setTestData] = useState([]);
-
-    //const allIssues = getData();
-    //allIssues.then((response) => setTestData(response));
-    //console.log(allIssues);
-
-    //for (let i = 0; i < myIssues.length; i++) {
-    //  console.log(myIssues[i]);
-    //}
-
     const myData = await getData();
-    console.log(myData);
+    //console.log(myData);
 
-    return <div>{"IDK LULZ"}</div>;
+    return (
+        <div>
+            <table className="p-5 rounded-lg bg-neutral-800 table-auto">
+                <thead>
+                    <tr>
+                        <th className="text-slate-400 text-left px-5 py-5">
+                            Title
+                        </th>
+                        <th className="text-slate-400 text-left px-5 py-5">
+                            Description
+                        </th>
+                        <th className="text-slate-400 text-left px-5 py-5">
+                            Issue Status
+                        </th>
+                        <th className="text-slate-400 text-left px-5 py-5">
+                            Created
+                        </th>
+                        <th className="text-slate-400 text-left px-5 py-5">
+                            Last Updated
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {myData.map((data, index) => (
+                        <tr
+                            key={data.id}
+                            className={
+                                index % 2 == 0 ? "bg-black" : "bg-neutral-800"
+                            }
+                        >
+                            <td className="border-b-2 border-t-2 border-slate-500 px-5 pr-10 py-5">
+                                {data.title}
+                            </td>
+                            <td className="border-b-2 border-t-2 border-slate-500 px-5 pr-10 py-5">
+                                {data.description}
+                            </td>
+                            <td className="border-b-2 border-t-2 border-slate-500 px-5 pr-10 py-5">
+                                {data.status}
+                            </td>
+                            <td className="border-b-2 border-t-2 border-slate-500 px-5 pr-10 py-5">{`${data.createdAt.toLocaleString()}`}</td>
+                            <td className="border-b-2 border-t-2 border-slate-500 px-5 pr-10 py-5">{`${data.updatedAt.toLocaleString()}`}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
 }
 
 /* 
@@ -74,30 +68,65 @@ myData =
       createdAt: 2024-05-21T01:17:22.792Z,
       updatedAt: 2024-05-21T01:17:22.792Z
     },
-    {
-      id: 2,
-      title: 'Bug 2',
-      description: 'Description of bug 2',
-      status: 'OPEN',
-      createdAt: 2024-05-21T02:49:49.098Z,
-      updatedAt: 2024-05-21T02:49:49.098Z
-    },
-    {
-      id: 3,
-      title: 'Bug 3',
-      description: 'Description of bug 3',
-      status: 'OPEN',
-      createdAt: 2024-05-23T03:18:29.746Z,
-      updatedAt: 2024-05-23T03:18:29.746Z
-    },
-    {
-      id: 4,
-      title: 'test issue 4',
-      description: 'description of issue 4',
-      status: 'OPEN',
-      createdAt: 2024-05-23T20:30:23.069Z,
-      updatedAt: 2024-05-23T20:30:23.069Z
-    }
+    ...etc
   ]
 }
+*/
+
+/* 
+Code that didn't work
+
+    import axios from "axios";
+import prisma from "@/prisma/client";
+import { InferGetServerSidePropsType, GetServerSideProps } from "next";
+
+    //const [waitingForData, setWaitingForData] = useState(false);
+    //const [testData, setTestData] = useState([]);
+
+    //const allIssues = getData();
+    //allIssues.then((response) => setTestData(response));
+    //console.log(allIssues);
+
+    //for (let i = 0; i < myIssues.length; i++) {
+    //  console.log(myIssues[i]);
+    //}
+
+ async function getData() {
+    try {
+        //setWaitingForData(true);
+        const allData = await prisma.issue.findMany();
+        // console.log(allData);
+        //setWaitingForData(false);
+        return allData;
+    } catch (error) {
+        //setWaitingForData(false);
+        console.log(error);
+        // return error;
+    }
+} 
+
+ enum Status {
+    OPEN,
+    IN_PROGRESS,
+    CLOSED
+  }
+  
+
+type dispIssue = {
+    id: number;
+    title: string;
+    description: string;
+    status: Status;
+    createdAt: Date;
+    updatedAt: Date;
+}; 
+
+ export const getServerSideProps = (async () => {
+    const myIssues = await prisma.issue.findMany();
+    //console.log(myIssues);
+    return {
+        props: { myIssues },
+    };
+}) 
+
 */
